@@ -1,3 +1,23 @@
+<template>
+  <!-- <Repl /> -->
+  <div v-if="!loading" class="antialiased">
+    <Header :store="store" />
+    <Repl
+      ref="repl"
+      :store="store"
+      show-compile-output
+      auto-resize
+      :sfc-options="sfcOptions"
+      :clear-console="false"
+      :show-import-map="store.userOptions.value.showHidden || false"
+      @keydown="handleKeydown"
+    />
+  </div>
+  <template v-else>
+    <div v-loading="{ text: 'Loading...' }" class="loading" />
+  </template>
+</template>
+
 <script setup lang="ts">
 import { Repl } from '@vue/repl'
 import Header from '@/components/Header.vue'
@@ -108,25 +128,6 @@ const formatCode = async () => {
 // persist state
 watchEffect(() => history.replaceState({}, '', `#${store.serialize()}`))
 </script>
-
-<template>
-  <div v-if="!loading" class="antialiased">
-    <Header :store="store" />
-    <Repl
-      ref="repl"
-      :store="store"
-      show-compile-output
-      auto-resize
-      :sfc-options="sfcOptions"
-      :clear-console="false"
-      :show-import-map="store.userOptions.value.showHidden || false"
-      @keydown="handleKeydown"
-    />
-  </div>
-  <template v-else>
-    <div v-loading="{ text: 'Loading...' }" class="loading" />
-  </template>
-</template>
 
 <style>
 body {
